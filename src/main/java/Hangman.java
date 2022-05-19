@@ -1,5 +1,19 @@
-public class Hangman {
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
+public class Hangman {
+    Set<String> usedWordsSet = new HashSet<>();
+    /**countAlphabet takes a word and an alphabet
+     * and returns the number of times the alphabet
+     * appears in the word
+     * @param word
+     * @param alphabet
+     * @return
+     */
     public int countAlphabet(String word, char alphabet) {
         int result = 0;
 
@@ -14,14 +28,17 @@ public class Hangman {
     }
 
     public String fetchWord(int requestedLength) {
-        switch(requestedLength){
-            case 5: return "pizza";
-            case 6: return "cheese";
-            case 7: return "chicken";
-            case 8: return "tomatoes";
-            case 9: return "pineapple";
-            case 10: return "mozzarella";
-            default: return null;
+        String result = null;
+        try(BufferedReader br = new BufferedReader(new FileReader("WordSource.txt"))){
+            while((result = br.readLine()) != null){
+                if(result.length() != requestedLength) continue;
+                else if(usedWordsSet.add(result)) break;
+            }
+        }catch(FileNotFoundException e){
+            e.printStackTrace();
+        }catch (IOException e){
+            e.printStackTrace();
         }
+        return result;
     }
 }
